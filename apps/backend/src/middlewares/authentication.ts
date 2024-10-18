@@ -1,19 +1,20 @@
 import Hapi from '@hapi/hapi';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 
 export const validateAuth = (request: Hapi.Request, h: Hapi.ResponseToolkit) => {
     const authorization = request.headers.authorization;
 
-    if(!authorization) {
-        return h.response({error: 'Unauthorized'}).code(401).takeover();
+    if (!authorization) {
+        return h.response({ error: 'Unauthorized' }).code(401).takeover();
     }
 
-    const base64Credentials = authorization.split(' ')[1];
-    const credentials =  Buffer.from(base64Credentials, 'base64').toString('ascii');
-    const [username, password] = credentials.split(':');
+    const token = authorization.split(' ')[1];
 
-    if(username === 'Luke' && password === 'DadSucks') {
-        return h.continue;
+    try {
+        jwt.verify(token, process.env.SECRET_KEY as string);
+    } catch (err) {
+        return h.response({ error: 'Invalid token' }).code(401).takeover();
     }
 
-    return h.response({error: 'Unauthorized'}).code(401).takeover();
-}
+    return h.continue;
+};

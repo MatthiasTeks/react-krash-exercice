@@ -1,7 +1,10 @@
 'use strict';
 
 import Hapi, { Server } from '@hapi/hapi';
-import { validateAuth } from './middlewares/authentication';
+import dotenv from 'dotenv';
+import routes from './routes';
+
+dotenv.config();
 
 const init = async (): Promise<void> => {
   const server: Server = Hapi.server({
@@ -9,16 +12,7 @@ const init = async (): Promise<void> => {
     host: "localhost"
   });
 
-  server.route({
-    method: "GET",
-    path: '/',
-    options: {
-      pre: [{method: validateAuth}]
-    },
-    handler: (request, h) => {
-      return 'Hello World!';
-    }
-  });
+  server.route(routes);
 
   await server.start();
   console.log('Server running on %s', server.info.uri);

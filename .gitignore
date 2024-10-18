@@ -5,5 +5,7 @@ build
 
 pnpm-lock.yaml
 
+.env.local
+
 .vscode/
 .idea/

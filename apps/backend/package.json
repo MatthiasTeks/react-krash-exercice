@@ -11,9 +11,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@hapi/hapi": "^21.3.10"
+    "@hapi/hapi": "^21.3.10",
+    "dotenv": "^16.4.5",
+    "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.7",
     "@types/node": "^22.7.6"
   }
 }
