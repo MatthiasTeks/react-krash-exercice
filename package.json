@@ -1,0 +1,15 @@
+{
+  "name": "react-krash-exercice",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "dev:frontend": "pnpm --filter frontend dev",
+    "dev:backend": "pnpm --filter backend dev",
+    "dev": "concurrently \"pnpm run dev:frontend\" \"pnpm run dev:backend\""
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^9.0.1"
+  }
+}
