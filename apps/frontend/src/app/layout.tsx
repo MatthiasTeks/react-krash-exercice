@@ -4,6 +4,7 @@ import './globals.css';
 import React from 'react';
 import StoreProvider from './StoreProvider';
 import Providers from './providers';
+import { Navbar } from '@/components/common/Navbar';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -28,9 +29,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased px-4 py-2`}>
         <Providers>
-          <StoreProvider>{children}</StoreProvider>
+          <StoreProvider>
+            <Navbar />
+            {children}
+            </StoreProvider>
         </Providers>
       </body>
     </html>
