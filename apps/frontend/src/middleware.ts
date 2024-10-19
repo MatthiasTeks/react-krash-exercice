@@ -26,5 +26,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/films/:path*', '/planets/:path*', '/species/:path*', '/starships/:path*', '/vehicles/:path*'],
+  matcher: ['/films/:path*', '/planets/:path*', '/species/:path*', '/starships/:path*', '/vehicles/:path*', '/people/:path*'],
 };
