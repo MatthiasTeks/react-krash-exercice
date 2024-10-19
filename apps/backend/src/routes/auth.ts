@@ -26,6 +26,31 @@ const authRoutes: Hapi.ServerRoute[] = [
     handler: (request, h) => {
       return 'Hello World!';
     }
+  },
+  {
+    method: 'GET',
+    path: '/verify-token',
+    handler: (request, h) => {
+      const token = request.headers.authorization?.split(' ')[1];
+  
+      if (!token) {
+        return h.response({ valid: false, message: 'No token provided' }).code(401);
+      }
+  
+      try {
+        const decoded = jwt.verify(token, process.env.SECRET_KEY as string);
+        return h.response({ valid: true, decoded }).code(200);
+      } catch (error) {
+        if (error instanceof jwt.TokenExpiredError) {
+          return h.response({ valid: false, message: 'Token expired' }).code(401);
+        } else if (error instanceof jwt.JsonWebTokenError) {
+          return h.response({ valid: false, message: 'Token invalid' }).code(401);
+        } else {
+          console.error('Unexpected error during token verification', error);
+          return h.response({ valid: false, message: 'Unexpected error' }).code(500);
+        }
+      }
+    }
   }
 ];
 
