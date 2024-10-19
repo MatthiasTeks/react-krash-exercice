@@ -1,5 +1,6 @@
 import Hapi from '@hapi/hapi';
 import { validateAuth } from '../middlewares/authentication';
+import { enrichEntityData, fetchFromSWAPI } from '../services/swapiService';
 
 const filmRoutes: Hapi.ServerRoute[] = [
   {
@@ -9,9 +10,15 @@ const filmRoutes: Hapi.ServerRoute[] = [
       pre: [{ method: validateAuth }]
     },
     handler: async (request, h) => {
-      const response = await fetch(`${process.env.SW_API}/films/`);
-      const films = await response.json();
-      return films;
+      try {
+        const { page = 1 } = request.query;
+
+        const films = await fetchFromSWAPI(`films/?page=${page}`);
+
+        return h.response(films).code(200);
+      } catch (error) {
+        return h.response({ error: 'Failed to fetch films' }).code(500);
+      }
     }
   },
   {
@@ -22,12 +29,13 @@ const filmRoutes: Hapi.ServerRoute[] = [
     },
     handler: async (request, h) => {
       const { id } = request.params;
-      const response = await fetch(`${process.env.SW_API}/films/${id}`);
-      if (!response.ok) {
+      try {
+        const film = await fetchFromSWAPI(`films/${id}`);
+        const enrichedFilm = await enrichEntityData(film);
+        return h.response(enrichedFilm).code(200);
+      } catch (error) {
         return h.response({ error: 'Film not found' }).code(404);
       }
-      const film = await response.json();
-      return film;
     }
   },
   {
@@ -38,12 +46,18 @@ const filmRoutes: Hapi.ServerRoute[] = [
     },
     handler: async (request, h) => {
       const { title } = request.params;
-      const response = await fetch(`${process.env.SW_API}/films/?search=${title}`);
-      if (!response.ok) {
-        return h.response({ error: 'Film not found' }).code(404);
+      try {
+        const searchData = await fetchFromSWAPI(`films/?search=${title}`);
+        if (!searchData.results || searchData.results.length === 0) {
+          return h.response({ error: 'No film matching this title' }).code(404);
+        }
+
+        const film = searchData.results[0];
+        const enrichedFilm = await enrichEntityData(film);
+        return h.response(enrichedFilm).code(200);
+      } catch (error) {
+        return h.response({ error: 'Failed to search film' }).code(500);
       }
-      const film = await response.json();
-      return film;
     }
   }
 ];

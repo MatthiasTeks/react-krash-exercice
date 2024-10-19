@@ -1,6 +1,5 @@
 import Hapi from '@hapi/hapi';
 import jwt from 'jsonwebtoken';
-import { validateAuth } from '../middlewares/authentication';
 
 const authRoutes: Hapi.ServerRoute[] = [
   {
@@ -19,24 +18,14 @@ const authRoutes: Hapi.ServerRoute[] = [
   },
   {
     method: 'GET',
-    path: '/',
-    options: {
-      pre: [{ method: validateAuth }]
-    },
-    handler: (request, h) => {
-      return 'Hello World!';
-    }
-  },
-  {
-    method: 'GET',
     path: '/verify-token',
     handler: (request, h) => {
       const token = request.headers.authorization?.split(' ')[1];
-  
+
       if (!token) {
         return h.response({ valid: false, message: 'No token provided' }).code(401);
       }
-  
+
       try {
         const decoded = jwt.verify(token, process.env.SECRET_KEY as string);
         return h.response({ valid: true, decoded }).code(200);
