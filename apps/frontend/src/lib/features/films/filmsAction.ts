@@ -9,7 +9,7 @@ export async function getFilms() {
     }
 
     try {
-        let response = await fetch(`${process.env.BACKEND_ENDPOINT}/films`, {
+        const response = await fetch(`${process.env.BACKEND_ENDPOINT}/films`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -36,7 +36,7 @@ export async function getFilmById(id: string) {
     }
 
     try {
-        let response = await fetch(`${process.env.BACKEND_ENDPOINT}/films/${id}`, {
+        const response = await fetch(`${process.env.BACKEND_ENDPOINT}/films/${id}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -63,7 +63,7 @@ export async function getFilmByTitle(title: string) {
     }
 
     try {
-        let response = await fetch(`${process.env.BACKEND_ENDPOINT}/films/search/${title}`, {
+        const response = await fetch(`${process.env.BACKEND_ENDPOINT}/films/search/${title}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
