@@ -1,14 +1,10 @@
-import { getFilms } from "@/lib/features/films/filmsAction";
-import { DataTable } from "./[search]/components/DataTable";
-import { columns } from "./[search]/components/ColumnDef";
+import { getFilms } from "@/lib/features/film/filmAction";
+import { DataTable } from "./components/DataTable";
+import { filmColumns } from "./components/ColumnDef";
 
 export default async function Films() {
-    const response = await getFilms();
-    const films = response?.results;
+  const response = await getFilms();
+  const films = response?.results;
 
-    return (
-        <div>
-            {films?.length ? <DataTable columns={columns} data={films} /> : <p>{response.message}</p>}
-        </div>
-    );
+  return <div>{films?.length ? <DataTable columns={filmColumns} data={films} /> : <p>{response.message}</p>}</div>;
 }
